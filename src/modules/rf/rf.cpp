@@ -52,7 +52,7 @@ int recent_rfcodes_last_used = 0;  // TODO: save/load in EEPROM
 void deinitRMT() {
     // Deinit RMT channels
     for (int i = 0; i < RMT_CHANNEL_MAX; i++) {
-        ESP_ERROR_CHECK_WITHOUT_ABORT(rmt_driver_uninstall((rmt_channel_t)i));
+        ESP_ERROR_CHECK_WITHOUT_ABORT(.((rmt_channel_t)i));
     }
 }
 
@@ -87,18 +87,10 @@ void rf_spectrum() { //@IncursioHack - https://github.com/IncursioHack ----thank
     tft.println("");
     tft.println("  RF - Spectrum");
 
-#ifdef FASTLED_RMT_BUILTIN_DRIVER 
-    bool run_twice=false;
-    RUN_AGAIN:
-#endif
     if(!initRfModule("rx", bruceConfig.rfFreq)) return;
     initRMT();
     rmt_get_ringbuf_handle(RMT_RX_CHANNEL, &rb);
     rmt_rx_start(RMT_RX_CHANNEL, true);
-
-#ifdef FASTLED_RMT_BUILTIN_DRIVER 
-    if(!run_twice)  { run_twice=true; goto RUN_AGAIN; }
-#endif
 
     while (rb) {
         size_t rx_size = 0;
@@ -401,13 +393,13 @@ void RCSwitch_send(uint64_t data, unsigned int bits, int pulse, int protocol, in
     mySwitch.setRepeatTransmit(repeat);
     mySwitch.send(data, bits);
 
-    /*
+    
     Serial.println(data,HEX);
     Serial.println(bits);
     Serial.println(pulse);
     Serial.println(protocol);
     Serial.println(repeat);
-    */
+    
 
     mySwitch.disableTransmit();
 
@@ -544,7 +536,7 @@ void initCC1101once(SPIClass* SSPI) {
             ELECHOUSE_cc1101.setGDO(bruceConfig.CC1101_bus.io0, bruceConfig.CC1101_bus.io2); 	//Set Gdo0 (tx) and Gdo2 (rx) for serial transmission function.
         else
             ELECHOUSE_cc1101.setGDO0(bruceConfig.CC1101_bus.io0);  // use Gdo0 for both Tx and Rx
-        
+
         /*
         Don't need to start comunications now
         if (ELECHOUSE_cc1101.getCC1101()){       // Check the CC1101 Spi connection.
