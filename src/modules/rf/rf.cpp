@@ -52,7 +52,7 @@ int recent_rfcodes_last_used = 0;  // TODO: save/load in EEPROM
 void deinitRMT() {
     // Deinit RMT channels
     for (int i = 0; i < RMT_CHANNEL_MAX; i++) {
-        ESP_ERROR_CHECK_WITHOUT_ABORT(.((rmt_channel_t)i));
+        ESP_ERROR_CHECK_WITHOUT_ABORT(rmt_driver_uninstall((rmt_channel_t)i));
     }
 }
 
